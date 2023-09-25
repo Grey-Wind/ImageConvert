@@ -72,11 +72,21 @@ function handleDrop(e) {
                 }
             }
 
-            // 将修改后的 XML 内容序列化为字符串
+            // 将修改后的 XML 内容序列化为字符串，并更改文件后缀名为 .svg
             var modifiedXmlContent = new XMLSerializer().serializeToString(xmlDoc);
+            var modifiedFileName = fileName.replace(/\.xml$/, ".svg");
 
-            // 进行后续操作，如上传修改后的内容，显示结果等
+            // 创建当前修改后的文件对象
+            var modifiedFile = new File([modifiedXmlContent], modifiedFileName, { type: 'image/svg+xml' });
 
+            // 创建下载链接
+            var downloadBtn = document.querySelector(".downloadBtn");
+            downloadBtn.href = URL.createObjectURL(modifiedFile);
+            downloadBtn.download = modifiedFileName;
+            downloadBtn.style.display = "block";
+            // downloadBtn.click(); // 模拟点击进行下载
+
+            showDownloadBtn();
         };
         reader.readAsText(file);
     }
@@ -93,6 +103,7 @@ function startHide() {
     hideSuccessBadge();
     hideDangerBadges();
     hideInfoBadge();
+    hideDownloadBtn();
 }
 
 function hideInfoBadge() {
@@ -110,9 +121,19 @@ function hideDangerBadges() {
     dangerBadges.hide(); // 隐藏
 }
 
+function hideDownloadBtn() {
+    var downloadBtn = $('.downloadBtn');
+    downloadBtn.hide()
+}
+
 function showLoadBtn() {
     var loadBtn = $('.btn-primary'); // 获取元素
     loadBtn.show(); // 显示
+}
+
+function showDownloadBtn() {
+    var downloadBtn = $('.downloadBtn');
+    downloadBtn.show();
 }
 
 function typeError() {
