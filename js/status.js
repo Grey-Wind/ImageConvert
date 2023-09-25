@@ -3,6 +3,7 @@ $(document).ready(function () {
     var successBadge = $('.badge-success');
     var dangerBadges = $('.badge-danger');
     var loadBtn = $('.btn-primary');
+    var downloadBtn = $('.downloadBtn');
 
     // 隐藏转换成功元素
     successBadge.hide();
@@ -12,4 +13,7 @@ $(document).ready(function () {
 
     // 隐藏转换中图标
     loadBtn.hide();
+
+    // 隐藏下载按钮
+    downloadBtn.hide();
 });
