@@ -72,10 +72,15 @@ function handleDrop(e) {
                 }
             }
 
-            // 替换文档头部和尾部
+            // 删除头部的 <?xml version="1.0" encoding="utf-8"?>
             var xmlString = new XMLSerializer().serializeToString(xmlDoc);
-            var modifiedXmlString = xmlString.replace('<?xml version="1.0" encoding="utf-8"?>', '<svg xmlns="http://www.w3.org/2000/svg">');
-            modifiedXmlString = modifiedXmlString.replace("</vector>", "</svg>");
+            var modifiedXmlString = xmlString.replace('<?xml version="1.0" encoding="utf-8"?>', '');
+
+            // 替换 <vector xmlns:android="http://schemas.android.com/apk/res/android" 为 <svg xmlns="http://www.w3.org/2000/svg"
+            modifiedXmlString = modifiedXmlString.replace('<vector xmlns:android="http://schemas.android.com/apk/res/android"', '<svg xmlns="http://www.w3.org/2000/svg"');
+
+            // 替换 </vector> 为 </svg>
+            modifiedXmlString = modifiedXmlString.replace('</vector>', '</svg>');
 
             // 将修改后的 XML 内容序列化为字符串，并更改文件后缀名为 .svg
             var modifiedXmlContent = new XMLSerializer().serializeToString(xmlDoc);
