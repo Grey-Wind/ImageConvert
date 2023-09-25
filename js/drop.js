@@ -1,46 +1,107 @@
 var svgContent = ""; // 添加全局变量
 
+var svgContents = []; // 添加全局变量，用于保存SVG内容
+
 function handleDrop(e) {
     e.preventDefault();
-    var file = e.dataTransfer.files[0];
-    // 对文件进行处理
-    startHide(); // 隐藏起始元素
-    showLoadBtn(); // 显示转换中
 
-    // 获取文件名和后缀名并进行处理
-    var fileName = file.name;
-    var fileExtension = fileName.split('.').pop();
+    var files = e.dataTransfer.files;
+    var fileCount = files.length;
+    var processedCount = 0;
+    var svgContents = [];
 
-    // 判断是否为 XML 文件
-    if (fileExtension.toLowerCase() === 'xml') {
-        var reader = new FileReader();
+    // 创建单个文件下载链接
+    function createDownloadLink(content, fileName) {
+        var blob = new Blob([content], { type: 'image/svg+xml' });
+        var url = window.URL.createObjectURL(blob);
 
-        reader.onloadend = function (event) {
-            var xmlContent = event.target.result;
-            var parser = new DOMParser();
-            var xmlDoc = parser.parseFromString(xmlContent, "text/xml");
+        var link = document.createElement('a');
+        link.href = url;
+        link.download = fileName;
+        link.style.display = 'none';
 
-            // 进行转换操作
-            var svgContent = convertToSVG(xmlDoc); // 使用局部变量
-
-            setTimeout(function () {
-                // 隐藏转换中
-                hideLoadBtn();
-                // 显示成功
-                showSuccessBadge();
-                setTimeout(function () {
-                    // 显示提示框
-                    alert("点击确定后开始下载")
-                    // 执行下载操作
-                    downloadSVG(svgContent, fileName);
-                }, 250)
-            }, 3000);
-        }
-
-        reader.readAsText(file);
-    } else {
-        typeError(); // 文件类型错误，提示用户
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
     }
+
+    // 处理单个XML文件
+    function processFile(file) {
+        var fileName = file.name;
+        var fileExtension = fileName.split('.').pop();
+
+        if (fileExtension.toLowerCase() === 'xml') {
+            var reader = new FileReader();
+            reader.onloadend = function(event) {
+                var xmlContent = event.target.result;
+                var parser = new DOMParser();
+                var xmlDoc = parser.parseFromString(xmlContent, 'text/xml');
+                var svgContent = convertToSVG(xmlDoc);
+
+                svgContents.push({ fileName: file.name.replace('.xml', '.svg'), content: svgContent });
+                processedCount++;
+                if (processedCount === fileCount) {
+                    // 所有文件都已处理完毕，开始生成ZIP文件并下载
+                    setTimeout(function() {
+                        var zip = new JSZip();
+                        svgContents.forEach(function(svgItem) {
+                            zip.file(svgItem.fileName, svgItem.content);
+                            createDownloadLink(svgItem.content, svgItem.fileName);
+                        });
+
+                        zip.generateAsync({ type: 'blob' }).then(function(content) {
+                            var url = window.URL.createObjectURL(content);
+                            var link = document.createElement('a');
+                            link.href = url;
+                            link.download = 'converted_svgs.zip';
+                            link.style.display = 'none';
+
+                            document.body.appendChild(link);
+                            link.click();
+                            document.body.removeChild(link);
+                            window.URL.revokeObjectURL(url);
+                        });
+                    }, 2000);
+                }
+            };
+            reader.readAsText(file);
+        } else {
+            console.error('Invalid file type: ' + fileName);
+            processedCount++;
+        }
+    }
+
+    // 逐个处理文件
+    for (var i = 0; i < fileCount; i++) {
+        processFile(files[i]);
+    }
+}
+
+function downloadSVGs(svgContents) {
+    var zip = new JSZip();
+
+    svgContents.forEach(function (svg) {
+        var fileName = svg.fileName;
+        var svgContent = svg.content;
+
+        // 创建Blob对象并添加到ZIP文件中
+        var blob = new Blob([svgContent], { type: "image/svg+xml" });
+        zip.file(fileName.replace(".xml", ".svg"), blob);
+    });
+
+    zip.generateAsync({ type: "blob" })
+        .then(function (content) {
+            // 生成ZIP文件并下载
+            var url = URL.createObjectURL(content);
+            var link = document.createElement("a");
+            link.href = url;
+            link.download = "converted_svgs.zip";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        });
 }
 
 function convertToSVG(xmlDoc) {
