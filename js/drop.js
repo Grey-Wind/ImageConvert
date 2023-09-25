@@ -88,32 +88,6 @@ function handleDrop(e) {
     }
 }
 
-function downloadSVGs(svgContents) {
-    var zip = new JSZip();
-
-    svgContents.forEach(function (svg) {
-        var fileName = svg.fileName;
-        var svgContent = svg.content;
-
-        // 创建Blob对象并添加到ZIP文件中
-        var blob = new Blob([svgContent], { type: "image/svg+xml" });
-        zip.file(fileName.replace(".xml", ".svg"), blob);
-    });
-
-    zip.generateAsync({ type: "blob" })
-        .then(function (content) {
-            // 生成ZIP文件并下载
-            var url = URL.createObjectURL(content);
-            var link = document.createElement("a");
-            link.href = url;
-            link.download = "converted_svgs.zip";
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
-        });
-}
-
 function convertToSVG(xmlDoc) {
     var svgContent = "";
 
@@ -152,18 +126,6 @@ function convertToSVG(xmlDoc) {
     }
 
     return svgContent;
-}
-
-function downloadSVG(svgContent, fileName) {
-    var blob = new Blob([svgContent], { type: "image/svg+xml" });
-    var url = URL.createObjectURL(blob);
-    var link = document.createElement("a");
-    link.href = url;
-    link.download = fileName.replace(".xml", ".svg");
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
 }
 
 function handleDragOver(e) {
