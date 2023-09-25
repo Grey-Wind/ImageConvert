@@ -79,8 +79,13 @@ function handleDrop(e) {
             // 创建当前修改后的文件对象
             var modifiedFile = new File([modifiedXmlContent], modifiedFileName, { type: 'image/svg+xml' });
 
-            // 显示下载按钮
-            showDownloadBtn();
+            setTimeout(function () {
+                // 显示下载按钮
+                showDownloadBtn();
+
+                // 隐藏转换中按钮
+                hideLoadBtn();
+            }, 3000);
 
             var downloadBtn = document.querySelector(".downloadBtn");
 
@@ -116,6 +121,7 @@ function startHide() {
     hideDangerBadges();
     hideInfoBadge();
     hideDownloadBtn();
+    hideLoadBtn();
 }
 
 function hideInfoBadge() {
@@ -136,6 +142,11 @@ function hideDangerBadges() {
 function hideDownloadBtn() {
     var downloadBtn = $('.downloadBtn');
     downloadBtn.hide()
+}
+
+function hideLoadBtn() {
+    var loadBtn = $('.btn-primary'); // 获取元素
+    loadBtn.hide(); // 显示
 }
 
 function showLoadBtn() {
