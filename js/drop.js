@@ -1,15 +1,16 @@
-var svgContent = ""; // 添加全局变量
-
-var svgContents = []; // 添加全局变量，用于保存SVG内容
-
 function handleDrop(e) {
     e.preventDefault();
 
     var files = e.dataTransfer.files;
     var fileCount = files.length;
 
+    // 判断是否为XML文件
+    function isXMLFile(file) {
+        return file.name.toLowerCase().endsWith('.xml');
+    }
+
     // 处理单个XML文件
-    if (fileCount === 1) {
+    if (fileCount === 1 && isXMLFile(files[0])) {
         var reader = new FileReader();
         reader.onloadend = function(event) {
             var xmlContent = event.target.result;
@@ -32,16 +33,13 @@ function handleDrop(e) {
         reader.readAsText(files[0]);
     }
     // 处理多个XML文件
-    else {
+    else if (fileCount > 1) {
         var processedCount = 0;
         var svgContents = [];
 
         // 处理单个XML文件
         function processFile(file) {
-            var fileName = file.name;
-            var fileExtension = fileName.split('.').pop();
-
-            if (fileExtension.toLowerCase() === 'xml') {
+            if (isXMLFile(file)) {
                 var reader = new FileReader();
                 reader.onloadend = function(event) {
                     var xmlContent = event.target.result;
@@ -49,7 +47,7 @@ function handleDrop(e) {
                     var xmlDoc = parser.parseFromString(xmlContent, 'text/xml');
                     var svgContent = convertToSVG(xmlDoc);
 
-                    svgContents.push({ fileName: fileName.replace('.xml', '.svg'), content: svgContent });
+                    svgContents.push({ fileName: file.name.replace('.xml', '.svg'), content: svgContent });
                     processedCount++;
                     if (processedCount === fileCount) {
                         // 所有文件都已处理完毕，开始生成ZIP文件并下载
@@ -76,7 +74,7 @@ function handleDrop(e) {
                 };
                 reader.readAsText(file);
             } else {
-                console.error('Invalid file type: ' + fileName);
+                console.error('Invalid file type: ' + file.name);
                 processedCount++;
             }
         }
