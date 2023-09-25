@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XML图片转换器</title>
+    <script src="./js/jquery-3.7.1.min.js" type="text/javascript"></script>
+    <script src="./js/status.js" type="text/javascript"></script>
+    <script src="./js/drop.js" type="text/javascript"></script>
+    <link href="./css/drop.css" rel="stylesheet" type="text/css">
+    <link href="./css/link.css" rel="stylesheet" type="text/css">
+    <link href="./css/status.css" rel="stylesheet" type="text/css">
+    <link href="./css/bootstrap-4.4.1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+    <div class="container">
+        <div id="dropzone" ondrop="handleDrop(event)" ondragover="handleDragOver(event)">
+            <p class="drop-text">将文件拖拽到此区域<br>会开始自动转换</p>
+        </div>
+        <div class="status">
+            <span class="badge badge-info">未导入文件</span>
+            <span class="badge badge-success">转换成功</span>
+            <span class="badge badge-danger">转换失败</span>
+            <span class="badge badge-danger">文件类型错误</span>
+            <button class="btn btn-primary" type="button" disabled>
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                &nbsp;&nbsp;转换中
+            </button>
+        </div>
+        <div class="introduce">
+            <h1>介绍</h1>
+            <p>这是一个非常简易的文件转换器，由青衣工作室制作。</p>
+            <p>旨在更加方便的把安卓XML格式的图标转换成SVG、PNG。</p>
+            <p>本网页完全开源，只要你遵守我的开源协议，就可以肆意使用本网页及本网页的代码。</p>
+            <p><strong>记住！一定要遵守我的开源协议。</strong></p>
+            <p>如果你没有遵守我的开源协议，不管你是谁，我都会进行诉讼。</p>
+            <p>就算你是政府机关也不行！你用了我的东西就要遵守我的版权协议！</p>
+            <p><a href="./license/index.html" target="_blank" class="link">点我查看版权协议</a></p>
+        </div>
+        <div class="copyright">
+            <p>
+                <a href="./license/index.html" target="_blank" class="link">&copy;&nbsp;2023&nbsp;-&nbsp;青衣工作室版权所有</a>
+            </p>
+        </div>
+    </div>
+    <link href="./css/introduce.css" rel="stylesheet" type="text/css">
+    <link href="./css/copyright.css" rel="stylesheet" type="text/css">
+    <link href="./css/container.css" rel="stylesheet" type="text/css">
+</body>
+
+</html>
