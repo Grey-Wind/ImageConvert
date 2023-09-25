@@ -72,6 +72,11 @@ function handleDrop(e) {
                 }
             }
 
+            // 替换文档头部和尾部
+            var xmlString = new XMLSerializer().serializeToString(xmlDoc);
+            var modifiedXmlString = xmlString.replace('<?xml version="1.0" encoding="utf-8"?>', '<svg xmlns="http://www.w3.org/2000/svg">');
+            modifiedXmlString = modifiedXmlString.replace("</vector>", "</svg>");
+
             // 将修改后的 XML 内容序列化为字符串，并更改文件后缀名为 .svg
             var modifiedXmlContent = new XMLSerializer().serializeToString(xmlDoc);
             var modifiedFileName = fileName.replace(/\.xml$/, ".svg");
