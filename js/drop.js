@@ -7,74 +7,84 @@ function handleDrop(e) {
 
     var files = e.dataTransfer.files;
     var fileCount = files.length;
-    var processedCount = 0;
-    var svgContents = [];
-
-    // 创建单个文件下载链接
-    function createDownloadLink(content, fileName) {
-        var blob = new Blob([content], { type: 'image/svg+xml' });
-        var url = window.URL.createObjectURL(blob);
-
-        var link = document.createElement('a');
-        link.href = url;
-        link.download = fileName;
-        link.style.display = 'none';
-
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        window.URL.revokeObjectURL(url);
-    }
 
     // 处理单个XML文件
-    function processFile(file) {
-        var fileName = file.name;
-        var fileExtension = fileName.split('.').pop();
+    if (fileCount === 1) {
+        var reader = new FileReader();
+        reader.onloadend = function(event) {
+            var xmlContent = event.target.result;
+            var parser = new DOMParser();
+            var xmlDoc = parser.parseFromString(xmlContent, 'text/xml');
+            var svgContent = convertToSVG(xmlDoc);
 
-        if (fileExtension.toLowerCase() === 'xml') {
-            var reader = new FileReader();
-            reader.onloadend = function(event) {
-                var xmlContent = event.target.result;
-                var parser = new DOMParser();
-                var xmlDoc = parser.parseFromString(xmlContent, 'text/xml');
-                var svgContent = convertToSVG(xmlDoc);
+            var blob = new Blob([svgContent], { type: 'image/svg+xml' });
+            var url = window.URL.createObjectURL(blob);
+            var link = document.createElement('a');
+            link.href = url;
+            link.download = files[0].name.replace('.xml', '.svg');
+            link.style.display = 'none';
 
-                svgContents.push({ fileName: file.name.replace('.xml', '.svg'), content: svgContent });
-                processedCount++;
-                if (processedCount === fileCount) {
-                    // 所有文件都已处理完毕，开始生成ZIP文件并下载
-                    setTimeout(function() {
-                        var zip = new JSZip();
-                        svgContents.forEach(function(svgItem) {
-                            zip.file(svgItem.fileName, svgItem.content);
-                            createDownloadLink(svgItem.content, svgItem.fileName);
-                        });
-
-                        zip.generateAsync({ type: 'blob' }).then(function(content) {
-                            var url = window.URL.createObjectURL(content);
-                            var link = document.createElement('a');
-                            link.href = url;
-                            link.download = 'converted_svgs.zip';
-                            link.style.display = 'none';
-
-                            document.body.appendChild(link);
-                            link.click();
-                            document.body.removeChild(link);
-                            window.URL.revokeObjectURL(url);
-                        });
-                    }, 2000);
-                }
-            };
-            reader.readAsText(file);
-        } else {
-            console.error('Invalid file type: ' + fileName);
-            processedCount++;
-        }
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+        };
+        reader.readAsText(files[0]);
     }
+    // 处理多个XML文件
+    else {
+        var processedCount = 0;
+        var svgContents = [];
 
-    // 逐个处理文件
-    for (var i = 0; i < fileCount; i++) {
-        processFile(files[i]);
+        // 处理单个XML文件
+        function processFile(file) {
+            var fileName = file.name;
+            var fileExtension = fileName.split('.').pop();
+
+            if (fileExtension.toLowerCase() === 'xml') {
+                var reader = new FileReader();
+                reader.onloadend = function(event) {
+                    var xmlContent = event.target.result;
+                    var parser = new DOMParser();
+                    var xmlDoc = parser.parseFromString(xmlContent, 'text/xml');
+                    var svgContent = convertToSVG(xmlDoc);
+
+                    svgContents.push({ fileName: fileName.replace('.xml', '.svg'), content: svgContent });
+                    processedCount++;
+                    if (processedCount === fileCount) {
+                        // 所有文件都已处理完毕，开始生成ZIP文件并下载
+                        setTimeout(function() {
+                            var zip = new JSZip();
+                            svgContents.forEach(function(svgItem) {
+                                zip.file(svgItem.fileName, svgItem.content);
+                            });
+
+                            zip.generateAsync({ type: 'blob' }).then(function(content) {
+                                var url = window.URL.createObjectURL(content);
+                                var link = document.createElement('a');
+                                link.href = url;
+                                link.download = 'converted_svgs.zip';
+                                link.style.display = 'none';
+
+                                document.body.appendChild(link);
+                                link.click();
+                                document.body.removeChild(link);
+                                window.URL.revokeObjectURL(url);
+                            });
+                        }, 2000);
+                    }
+                };
+                reader.readAsText(file);
+            } else {
+                console.error('Invalid file type: ' + fileName);
+                processedCount++;
+            }
+        }
+
+        // 逐个处理文件
+        for (var i = 0; i < fileCount; i++) {
+            processFile(files[i]);
+        }
     }
 }
 
