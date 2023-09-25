@@ -79,14 +79,26 @@ function handleDrop(e) {
             // 创建当前修改后的文件对象
             var modifiedFile = new File([modifiedXmlContent], modifiedFileName, { type: 'image/svg+xml' });
 
-            // 创建下载链接
-            var downloadBtn = document.querySelector(".downloadBtn");
-            downloadBtn.href = URL.createObjectURL(modifiedFile);
-            downloadBtn.download = modifiedFileName;
-            downloadBtn.style.display = "block";
-            // downloadBtn.click(); // 模拟点击进行下载
-
+            // 显示下载按钮
             showDownloadBtn();
+
+            var downloadBtn = document.querySelector(".downloadBtn");
+
+            downloadBtn.addEventListener("click", function () {
+                // 创建下载链接并模拟点击进行下载
+                var downloadLink = URL.createObjectURL(modifiedFile);
+                var filename = modifiedFileName;
+
+                var a = document.createElement("a");
+                a.href = downloadLink;
+                a.download = filename;
+                a.style.display = "none";
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(downloadLink);
+            });
+
         };
         reader.readAsText(file);
     }
