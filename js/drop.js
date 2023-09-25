@@ -26,8 +26,14 @@ function handleDrop(e) {
             setTimeout(function () {
                 // 隐藏转换中
                 hideLoadBtn();
-                // 下载生成的 SVG 文件
-            downloadSVG(svgContent, fileName);
+                // 显示成功
+                showSuccessBadge();
+                setTimeout(function () {
+                    // 显示提示框
+                    alert("点击确定后开始下载")
+                    // 执行下载操作
+                    downloadSVG(svgContent, fileName);
+                }, 250)
             }, 3000);
         }
 
@@ -123,6 +129,11 @@ function hideLoadBtn() {
 function showLoadBtn() {
     var loadBtn = $('.btn-primary'); // 获取元素
     loadBtn.show(); // 显示
+}
+
+function showSuccessBadge() {
+    var successBadge = $('.badge-success'); // 获取元素
+    successBadge.show(); // 显示
 }
 
 function typeError() {
