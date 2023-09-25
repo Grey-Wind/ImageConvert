@@ -2,8 +2,19 @@ function handleDrop(e) {
     e.preventDefault();
     var file = e.dataTransfer.files[0];
     // 对文件进行处理
-    startHide(); // 元素隐藏
+    startHide(); // 起始元素隐藏
     showLoadBtn(); //显示转换中
+
+    // 获取文件名和后缀名并进行处理
+    var fileName = file.name;
+    var fileExtension = fileName.split('.').pop();
+    
+    if (fileExtension.toLowerCase() === 'xml') {
+        // 对xml文件进行处理
+    } else {
+        // 文件后缀名不是xml，进行其他处理
+        // 这里可以显示一个错误提示或者执行其他操作
+    }
 }
 
 function handleDragOver(e) {
