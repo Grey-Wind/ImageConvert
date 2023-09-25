@@ -2,18 +2,86 @@ function handleDrop(e) {
     e.preventDefault();
     var file = e.dataTransfer.files[0];
     // 对文件进行处理
-    startHide(); // 起始元素隐藏
-    showLoadBtn(); //显示转换中
+    startHide(); // 隐藏起始元素
+    showLoadBtn(); // 显示转换中
 
     // 获取文件名和后缀名并进行处理
     var fileName = file.name;
     var fileExtension = fileName.split('.').pop();
 
+    // 判断是否为 XML 文件
     if (fileExtension.toLowerCase() === 'xml') {
-        showLoadBtn(); //显示转换中
+        // 读取上传的文件内容
+        var reader = new FileReader();
+        reader.onload = function (event) {
+            var xmlContent = event.target.result;
+
+            // 解析 XML 内容
+            var parser = new DOMParser();
+            var xmlDoc = parser.parseFromString(xmlContent, "text/xml");
+
+            // 遍历 XML 树，对包含指定属性的元素进行修改
+            var elements = xmlDoc.getElementsByTagName("*");
+            for (var i = 0; i < elements.length; i++) {
+                var element = elements[i];
+
+                // 修改 android:width 属性为 width
+                var androidWidth = element.getAttribute("android:width");
+                if (androidWidth) {
+                    element.removeAttribute("android:width");
+                    element.setAttribute("width", androidWidth);
+                }
+
+                // 修改 android:height 属性为 height
+                var androidHeight = element.getAttribute("android:height");
+                if (androidHeight) {
+                    element.removeAttribute("android:height");
+                    element.setAttribute("height", androidHeight);
+                }
+
+                // 修改 android:pathData 属性为 d
+                var androidPathData = element.getAttribute("android:pathData");
+                if (androidPathData) {
+                    element.removeAttribute("android:pathData");
+                    element.setAttribute("d", androidPathData);
+                }
+
+                // 修改 android:fillColor 属性为 fill，如果不存在则添加默认白色填充色
+                var fillColor = element.getAttribute("android:fillColor");
+                if (fillColor) {
+                    element.removeAttribute("android:fillColor");
+                    element.setAttribute("fill", fillColor);
+                } else {
+                    element.setAttribute("fill", "#ffffff");
+                }
+
+                // 修改 android:viewportHeight 和 android:viewportWidth 为 viewBox
+                var viewportHeight = xmlDoc.documentElement.getAttribute("android:viewportHeight");
+                var viewportWidth = xmlDoc.documentElement.getAttribute("android:viewportWidth");
+                if (viewportHeight && viewportWidth) {
+                    xmlDoc.documentElement.setAttribute("viewBox", "0 0 " + viewportWidth + " " + viewportHeight);
+                    xmlDoc.documentElement.removeAttribute("android:viewportHeight");
+                    xmlDoc.documentElement.removeAttribute("android:viewportWidth");
+                }
+
+                // 修改 android:fillType 属性为 fillType
+                var fillType = element.getAttribute("android:fillType");
+                if (fillType) {
+                    element.setAttribute("fillType", fillType);
+                    element.removeAttribute("android:fillType");
+                }
+            }
+
+            // 将修改后的 XML 内容序列化为字符串
+            var modifiedXmlContent = new XMLSerializer().serializeToString(xmlDoc);
+
+            // 进行后续操作，如上传修改后的内容，显示结果等
+
+        };
+        reader.readAsText(file);
     }
     else {
-        typeError();
+        typeError(); // 文件类型错误，提示用户
     }
 }
 
@@ -51,7 +119,7 @@ function typeError() {
     // 获取元素
     var typeError = $('.type-error');
     var loadBtn = $('.btn-primary');
-    
+
     typeError.show();
     loadBtn.hide();
 }
