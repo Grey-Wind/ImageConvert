@@ -1,3 +1,5 @@
+var svgContent = ""; // 添加全局变量
+
 function handleDrop(e) {
     e.preventDefault();
     var file = e.dataTransfer.files[0];
@@ -11,115 +13,80 @@ function handleDrop(e) {
 
     // 判断是否为 XML 文件
     if (fileExtension.toLowerCase() === 'xml') {
-        // 读取上传的文件内容
         var reader = new FileReader();
-        reader.onload = function (event) {
-            var xmlContent = event.target.result;
 
-            // 解析 XML 内容
+        reader.onloadend = function (event) {
+            var xmlContent = event.target.result;
             var parser = new DOMParser();
             var xmlDoc = parser.parseFromString(xmlContent, "text/xml");
 
-            // 遍历 XML 树，对包含指定属性的元素进行修改
-            var elements = xmlDoc.getElementsByTagName("*");
-            for (var i = 0; i < elements.length; i++) {
-                var element = elements[i];
-
-                // 修改 android:width 属性为 width
-                var androidWidth = element.getAttribute("android:width");
-                if (androidWidth) {
-                    element.removeAttribute("android:width");
-                    element.setAttribute("width", androidWidth);
-                }
-
-                // 修改 android:height 属性为 height
-                var androidHeight = element.getAttribute("android:height");
-                if (androidHeight) {
-                    element.removeAttribute("android:height");
-                    element.setAttribute("height", androidHeight);
-                }
-
-                // 修改 android:pathData 属性为 d
-                var androidPathData = element.getAttribute("android:pathData");
-                if (androidPathData) {
-                    element.removeAttribute("android:pathData");
-                    element.setAttribute("d", androidPathData);
-                }
-
-                // 修改 android:fillColor 属性为 fill，如果不存在则添加默认白色填充色
-                var fillColor = element.getAttribute("android:fillColor");
-                if (fillColor) {
-                    element.removeAttribute("android:fillColor");
-                    element.setAttribute("fill", fillColor);
-                } else {
-                    element.setAttribute("fill", "#ffffff");
-                }
-
-                // 修改 android:viewportHeight 和 android:viewportWidth 为 viewBox
-                var viewportHeight = xmlDoc.documentElement.getAttribute("android:viewportHeight");
-                var viewportWidth = xmlDoc.documentElement.getAttribute("android:viewportWidth");
-                if (viewportHeight && viewportWidth) {
-                    xmlDoc.documentElement.setAttribute("viewBox", "0 0 " + viewportWidth + " " + viewportHeight);
-                    xmlDoc.documentElement.removeAttribute("android:viewportHeight");
-                    xmlDoc.documentElement.removeAttribute("android:viewportWidth");
-                }
-
-                // 修改 android:fillType 属性为 fillType
-                var fillType = element.getAttribute("android:fillType");
-                if (fillType) {
-                    element.setAttribute("fillType", fillType);
-                    element.removeAttribute("android:fillType");
-                }
-            }
-
-            // 删除头部的 <?xml version="1.0" encoding="utf-8"?>
-            var xmlString = new XMLSerializer().serializeToString(xmlDoc);
-            var modifiedXmlString = xmlString.replace('<?xml version="1.0" encoding="utf-8"?>', '');
-
-            // 替换 <vector xmlns:android="http://schemas.android.com/apk/res/android" 为 <svg xmlns="http://www.w3.org/2000/svg"
-            modifiedXmlString = modifiedXmlString.replace('<vector xmlns:android="http://schemas.android.com/apk/res/android"', '<svg xmlns="http://www.w3.org/2000/svg"');
-
-            // 替换 </vector> 为 </svg>
-            modifiedXmlString = modifiedXmlString.replace('</vector>', '</svg>');
-
-            // 将修改后的 XML 内容序列化为字符串，并更改文件后缀名为 .svg
-            var modifiedXmlContent = new XMLSerializer().serializeToString(xmlDoc);
-            var modifiedFileName = fileName.replace(/\.xml$/, ".svg");
-
-            // 创建当前修改后的文件对象
-            var modifiedFile = new File([modifiedXmlContent], modifiedFileName, { type: 'image/svg+xml' });
+            // 进行转换操作
+            var svgContent = convertToSVG(xmlDoc); // 使用局部变量
 
             setTimeout(function () {
-                // 显示下载按钮
-                showDownloadBtn();
-
-                // 隐藏转换中按钮
+                // 隐藏转换中
                 hideLoadBtn();
+                // 下载生成的 SVG 文件
+            downloadSVG(svgContent, fileName);
             }, 3000);
+        }
 
-            var downloadBtn = document.querySelector(".downloadBtn");
-
-            downloadBtn.addEventListener("click", function () {
-                // 创建下载链接并模拟点击进行下载
-                var downloadLink = URL.createObjectURL(modifiedFile);
-                var filename = modifiedFileName;
-
-                var a = document.createElement("a");
-                a.href = downloadLink;
-                a.download = filename;
-                a.style.display = "none";
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(downloadLink);
-            });
-
-        };
         reader.readAsText(file);
-    }
-    else {
+    } else {
         typeError(); // 文件类型错误，提示用户
     }
+}
+
+function convertToSVG(xmlDoc) {
+    var svgContent = "";
+
+    // 获取 VectorDrawable 的根节点
+    var vectorNode = xmlDoc.getElementsByTagName("vector")[0];
+
+    if (vectorNode) {
+        var width = vectorNode.getAttribute("android:viewportWidth");
+        var height = vectorNode.getAttribute("android:viewportHeight");
+
+        // 创建 SVG 元素并设置宽高属性
+        svgContent += `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}">`;
+
+        // 遍历 VectorDrawable 的子节点
+        var children = vectorNode.childNodes;
+        for (var i = 0; i < children.length; i++) {
+            var child = children[i];
+
+            // 如果是路径元素，则进行转换
+            if (child.nodeType === 1 && child.nodeName === "path") {
+                var pathData = child.getAttribute("android:pathData");
+                var fillColor = child.getAttribute("android:fillColor");
+                var strokeColor = child.getAttribute("android:strokeColor");
+                var strokeWidth = child.getAttribute("android:strokeWidth");
+
+                // 创建路径元素并设置属性
+                var path = `<path d="${pathData}" fill="${fillColor}" stroke="${strokeColor}" stroke-width="${strokeWidth}" />`;
+
+                // 将路径元素添加到 SVG 内容中
+                svgContent += path;
+            }
+        }
+
+        // 关闭 SVG 元素
+        svgContent += "</svg>";
+    }
+
+    return svgContent;
+}
+
+function downloadSVG(svgContent, fileName) {
+    var blob = new Blob([svgContent], { type: "image/svg+xml" });
+    var url = URL.createObjectURL(blob);
+    var link = document.createElement("a");
+    link.href = url;
+    link.download = fileName.replace(".xml", ".svg");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
 }
 
 function handleDragOver(e) {
@@ -130,7 +97,6 @@ function startHide() {
     hideSuccessBadge();
     hideDangerBadges();
     hideInfoBadge();
-    hideDownloadBtn();
     hideLoadBtn();
 }
 
@@ -149,11 +115,6 @@ function hideDangerBadges() {
     dangerBadges.hide(); // 隐藏
 }
 
-function hideDownloadBtn() {
-    var downloadBtn = $('.downloadBtn');
-    downloadBtn.hide()
-}
-
 function hideLoadBtn() {
     var loadBtn = $('.btn-primary'); // 获取元素
     loadBtn.hide(); // 显示
@@ -162,11 +123,6 @@ function hideLoadBtn() {
 function showLoadBtn() {
     var loadBtn = $('.btn-primary'); // 获取元素
     loadBtn.show(); // 显示
-}
-
-function showDownloadBtn() {
-    var downloadBtn = $('.downloadBtn');
-    downloadBtn.show();
 }
 
 function typeError() {
