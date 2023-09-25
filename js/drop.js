@@ -11,70 +11,85 @@ function handleDrop(e) {
 
     // 处理单个XML文件
     if (fileCount === 1 && isXMLFile(files[0])) {
-        var reader = new FileReader();
-        reader.onloadend = function(event) {
-            var xmlContent = event.target.result;
-            var parser = new DOMParser();
-            var xmlDoc = parser.parseFromString(xmlContent, 'text/xml');
-            var svgContent = convertToSVG(xmlDoc);
+        startHide(); // 隐藏起始元素
+        showLoadBtn(); // 显示转换中
+        setTimeout(function () {
+            var reader = new FileReader();
+            reader.onloadend = function (event) {
+                var xmlContent = event.target.result;
+                var parser = new DOMParser();
+                var xmlDoc = parser.parseFromString(xmlContent, 'text/xml');
+                var svgContent = convertToSVG(xmlDoc);
 
-            var blob = new Blob([svgContent], { type: 'image/svg+xml' });
-            var url = window.URL.createObjectURL(blob);
-            var link = document.createElement('a');
-            link.href = url;
-            link.download = files[0].name.replace('.xml', '.svg');
-            link.style.display = 'none';
+                var blob = new Blob([svgContent], { type: 'image/svg+xml' });
+                var url = window.URL.createObjectURL(blob);
+                var link = document.createElement('a');
+                link.href = url;
+                link.download = files[0].name.replace('.xml', '.svg');
+                link.style.display = 'none';
 
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            window.URL.revokeObjectURL(url);
-        };
-        reader.readAsText(files[0]);
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                window.URL.revokeObjectURL(url);
+            };
+            reader.readAsText(files[0]);
+
+            hideLoadBtn();
+            showSuccessBadge();
+        }, 3000)
     }
     // 处理多个XML文件
     else if (fileCount > 1) {
+        startHide(); // 隐藏起始元素
+        showLoadBtn(); // 显示转换中
         var processedCount = 0;
         var svgContents = [];
 
         // 处理单个XML文件
         function processFile(file) {
             if (isXMLFile(file)) {
-                var reader = new FileReader();
-                reader.onloadend = function(event) {
-                    var xmlContent = event.target.result;
-                    var parser = new DOMParser();
-                    var xmlDoc = parser.parseFromString(xmlContent, 'text/xml');
-                    var svgContent = convertToSVG(xmlDoc);
+                setTimeout(function () {
+                    var reader = new FileReader();
+                    reader.onloadend = function (event) {
+                        var xmlContent = event.target.result;
+                        var parser = new DOMParser();
+                        var xmlDoc = parser.parseFromString(xmlContent, 'text/xml');
+                        var svgContent = convertToSVG(xmlDoc);
 
-                    svgContents.push({ fileName: file.name.replace('.xml', '.svg'), content: svgContent });
-                    processedCount++;
-                    if (processedCount === fileCount) {
-                        // 所有文件都已处理完毕，开始生成ZIP文件并下载
-                        setTimeout(function() {
-                            var zip = new JSZip();
-                            svgContents.forEach(function(svgItem) {
-                                zip.file(svgItem.fileName, svgItem.content);
-                            });
+                        svgContents.push({ fileName: file.name.replace('.xml', '.svg'), content: svgContent });
+                        processedCount++;
+                        if (processedCount === fileCount) {
+                            // 所有文件都已处理完毕，开始生成ZIP文件并下载
+                            setTimeout(function () {
+                                var zip = new JSZip();
+                                svgContents.forEach(function (svgItem) {
+                                    zip.file(svgItem.fileName, svgItem.content);
+                                });
 
-                            zip.generateAsync({ type: 'blob' }).then(function(content) {
-                                var url = window.URL.createObjectURL(content);
-                                var link = document.createElement('a');
-                                link.href = url;
-                                link.download = 'converted_svgs.zip';
-                                link.style.display = 'none';
+                                zip.generateAsync({ type: 'blob' }).then(function (content) {
+                                    var url = window.URL.createObjectURL(content);
+                                    var link = document.createElement('a');
+                                    link.href = url;
+                                    link.download = 'converted_svgs.zip';
+                                    link.style.display = 'none';
 
-                                document.body.appendChild(link);
-                                link.click();
-                                document.body.removeChild(link);
-                                window.URL.revokeObjectURL(url);
-                            });
-                        }, 2000);
-                    }
-                };
-                reader.readAsText(file);
+                                    document.body.appendChild(link);
+                                    link.click();
+                                    document.body.removeChild(link);
+                                    window.URL.revokeObjectURL(url);
+                                });
+                            }, 2000);
+                        }
+                    };
+                    reader.readAsText(file);
+
+                    hideLoadBtn();
+                    showSuccessBadge();
+                }, 3000)
             } else {
-                console.error('Invalid file type: ' + file.name);
+                showDangerBadges();
+                // console.error('Invalid file type: ' + file.name);
                 processedCount++;
             }
         }
@@ -165,6 +180,11 @@ function showLoadBtn() {
 function showSuccessBadge() {
     var successBadge = $('.badge-success'); // 获取元素
     successBadge.show(); // 显示
+}
+
+function showDangerBadges() {
+    var dangerBadges = $('.badge-danger'); // 获取元素
+    dangerBadges.show(); // 显示
 }
 
 function typeError() {
