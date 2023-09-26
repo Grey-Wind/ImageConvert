@@ -1,7 +1,7 @@
 function handleDrop(e) {
     e.preventDefault();
 
-    var files = e.dataTransfer.files;
+    var files = e.dataTransfer.files; // 获取拖放的文件列表
     var fileCount = files.length;
 
     // 判断是否为XML文件
@@ -37,7 +37,7 @@ function handleDrop(e) {
 
             hideLoadBtn();
             showSuccessBadge();
-        }, 3000)
+        }, 3000);
     }
     // 处理多个XML文件
     else if (fileCount > 1) {
@@ -86,10 +86,10 @@ function handleDrop(e) {
 
                     hideLoadBtn();
                     showSuccessBadge();
-                }, 3000)
+                }, 3000);
             } else {
                 showDangerBadges();
-                // console.error('Invalid file type: ' + file.name);
+                // console.error('错误的文件类型: ' + file.name);
                 processedCount++;
             }
         }
