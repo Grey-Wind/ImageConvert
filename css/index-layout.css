@@ -1,0 +1,12 @@
+@media screen and (min-width: 900px) {
+    .layout {
+        padding-left: 10%;
+        padding-right: 10%;
+        padding: 0 10%;
+    }
+
+    .row {
+        display: flex;
+        justify-content: center; /* 水平居中 */
+    }
+}
