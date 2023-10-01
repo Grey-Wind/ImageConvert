@@ -5,48 +5,103 @@ function handleDrop(event) {
     showLoadBtn();
     hideInfoBadge();
 
-    // 读取文件
-    var file = event.dataTransfer.files[0];
-    var reader = new FileReader();
-    reader.onload = function (e) {
-        var svgText = e.target.result;
+    var fileCount = event.dataTransfer.files.length;
 
-        // 转换SVG为PNG
-        svgToPng(svgText)
-            .then(function (pngDataUrl) {
-                // 使用blob下载
-                // 将数据URL转换为Blob对象
-                var byteString = atob(pngDataUrl.split(',')[1]);
-                var mimeString = pngDataUrl.split(',')[0].split(':')[1].split(';')[0];
-                var ab = new ArrayBuffer(byteString.length);
-                var ia = new Uint8Array(ab);
-                for (var i = 0; i < byteString.length; i++) {
-                    ia[i] = byteString.charCodeAt(i);
-                }
-                var blob = new Blob([ab], { type: mimeString });
+    if (fileCount === 1) {
+        // 单个文件，直接进行转换和下载
+        var file = event.dataTransfer.files[0];
+        var reader = new FileReader();
 
-                // 创建一个<a>元素并设置下载属性
-                var link = document.createElement('a');
-                link.href = URL.createObjectURL(blob);
-                link.download = 'image.png';
-                link.style.display = 'none';
+        reader.onload = function (e) {
+            var svgText = e.target.result;
 
-                // 将<a>元素添加到页面上并模拟单击以触发下载
-                document.body.appendChild(link);
-                link.click();
+            // 转换SVG为PNG
+            svgToPng(svgText)
+                .then(function (pngDataUrl) {
+                    downloadPng(pngDataUrl, file.name.replace('.svg', '.png'));
+                })
+                .catch(function (err) {
+                    console.error(err);
+                });
+        };
 
-                // 清理操作
-                document.body.removeChild(link);
-                URL.revokeObjectURL(link.href);
-            })
-            .catch(function (err) {
-                console.error(err);
-            });
-    };
-    reader.readAsText(file);
+        reader.readAsText(file);
+    } else if (fileCount > 1) {
+        // 多个文件，逐个转换并保存到zip对象
+        var zip = new JSZip();
+        var processedFileCount = 0;
+
+        for (var i = 0; i < fileCount; i++) {
+            var file = event.dataTransfer.files[i];
+            var reader = new FileReader();
+
+            reader.onload = (function (file) {
+                return function (e) {
+                    var svgText = e.target.result;
+
+                    // 转换SVG为PNG
+                    svgToPng(svgText)
+                        .then(function (pngDataUrl) {
+                            zip.file(file.name.replace('.svg', '.png'), pngDataUrl.split(',')[1], { base64: true });
+                            processedFileCount++;
+
+                            if (processedFileCount === fileCount) {
+                                // 全部转换完成，打包下载
+                                downloadZip(zip);
+                            }
+                        })
+                        .catch(function (err) {
+                            console.error(err);
+                        });
+                };
+            })(file);
+
+            reader.readAsText(file);
+        }
+    }
 
     hideLoadBtn();
     showSuccessBadge();
+}
+
+function downloadPng(pngDataUrl, filename) {
+    // 下载单个文件
+    var byteString = atob(pngDataUrl.split(',')[1]);
+    var mimeString = pngDataUrl.split(',')[0].split(':')[1].split(';')[0];
+    var ab = new ArrayBuffer(byteString.length);
+    var ia = new Uint8Array(ab);
+    for (var i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
+    }
+    var blob = new Blob([ab], { type: mimeString });
+
+    var link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = filename;
+    link.style.display = 'none';
+
+    document.body.appendChild(link);
+    link.click();
+
+    document.body.removeChild(link);
+    URL.revokeObjectURL(link.href);
+}
+
+function downloadZip(zip) {
+    // 打包下载多个文件
+    zip.generateAsync({ type: 'blob' })
+        .then(function (content) {
+            var link = document.createElement('a');
+            link.href = URL.createObjectURL(content);
+            link.download = 'images.zip';
+            link.style.display = 'none';
+
+            document.body.appendChild(link);
+            link.click();
+
+            document.body.removeChild(link);
+            URL.revokeObjectURL(link.href);
+        });
 }
 
 // 处理拖放区域的dragover事件
