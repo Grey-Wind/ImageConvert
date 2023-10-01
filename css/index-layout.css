@@ -1,5 +1,5 @@
 /* 电脑UI样式 */
-@media screen and (min-width: 900px) {
+@media screen and (min-width: 1000px) {
     .layout {
         padding-left: 10%;
         padding-right: 10%;
@@ -15,6 +15,21 @@
 
 /* 手机UI样式 */
 @media screen and (max-width: 600px) {
+    .layout {
+        padding-left: 10%;
+        padding-right: 10%;
+        padding: 0 10%;
+    }
+
+    .row {
+        display: flex;
+        /* 水平居中 */
+        justify-content: center;
+    }
+}
+
+/* Pad UI样式 */
+@media screen and (min-width: 600px) and (max-width: 1000px) {
     .layout {
         padding-left: 10%;
         padding-right: 10%;
