@@ -1,5 +1,3 @@
-var svgContainer = document.getElementById('svgContainer');
-
 // 处理文件拖入事件
 function handleDrop(event) {
     event.preventDefault();
