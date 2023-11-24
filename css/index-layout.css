@@ -11,6 +11,10 @@
         /* 水平居中 */
         justify-content: center;
     }
+
+    .card {
+        margin-bottom: 20px; /* 添加下方间隔 */
+    }
 }
 
 /* 手机UI样式 */
@@ -25,6 +29,10 @@
         display: flex;
         /* 水平居中 */
         justify-content: center;
+    }
+
+    .card {
+        margin-bottom: 10px; /* 添加下方间隔 */
     }
 }
 
@@ -41,6 +49,10 @@
         /* 水平居中 */
         justify-content: center;
     }
+
+    .card {
+        margin-bottom: 10px; /* 添加下方间隔 */
+    }
 }
 
 /* 大Pad UI样式 */
@@ -49,5 +61,9 @@
         display: flex;
         /* 水平居中 */
         justify-content: center;
+    }
+
+    .card {
+        margin-bottom: 15px; /* 添加下方间隔 */
     }
 }
