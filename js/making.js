@@ -1,6 +1,8 @@
 window.onload = function() {
     var makingElements = document.querySelectorAll('.making');
     for (var i = 0; i < makingElements.length; i++) {
-      makingElements[i].innerText = '制作中';
+        if (makingElements[i].classList.contains("making")) {
+            makingElements[i].textContent = "未制作";
+        }
     }
-  };
+};
