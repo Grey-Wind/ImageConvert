@@ -3,6 +3,7 @@ import Copyright from './components/Copyright.vue'
 </script>
 
 <template>
+  
   <Copyright />
 </template>
 
