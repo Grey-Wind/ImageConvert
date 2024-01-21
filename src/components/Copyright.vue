@@ -5,23 +5,14 @@
 </template>
 
 <style scoped>
-#copyright {
-    text-align: center;
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    width: 100%;
-    height: 10vh;
-    transform: translate(-50%, -50%);
-    background-color: #f5f5f5;
-}
+  #container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
 
-#copyright p {
-    margin: 0;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 16px;
-}
+  #copyright {
+    text-align: center;
+    margin-top: auto;
+  }
 </style>

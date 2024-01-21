@@ -1,4 +1,4 @@
-import './assets/main.css'
+import './assets/bgcolor.css'
 
 import { createApp } from 'vue'
 import DeveloperTools from './index.vue'
