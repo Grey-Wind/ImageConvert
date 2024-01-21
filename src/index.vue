@@ -1,5 +1,5 @@
 <script setup>
-import Copywrite from './components/Copyright.vue'
+import Copyright from './components/Copyright.vue'
 </script>
 
 <template>
