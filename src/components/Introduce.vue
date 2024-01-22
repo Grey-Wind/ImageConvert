@@ -5,6 +5,7 @@ import CommunityIcon from './icons/IconCommunity.vue'
 import SupportIcon from './icons/IconSupport.vue'
 import ImageConverterIcon from './icons/IconImageConverter.vue'
 import DocumentConverterIcon from './icons/IconDocumentConverter.vue'
+import CodeIcon from './icons/IconCode.vue'
 </script>
 
 <template>
@@ -27,18 +28,10 @@ import DocumentConverterIcon from './icons/IconDocumentConverter.vue'
 
   <IntroduceItem>
     <template #icon>
-      <EcosystemIcon />
+      <CodeIcon />
     </template>
-    <template #heading>Ecosystem</template>
-
-    Get official tools and libraries for your project:
-    <a href="https://pinia.vuejs.org/" target="_blank" rel="noopener">Pinia</a>,
-    <a href="https://router.vuejs.org/" target="_blank" rel="noopener">Vue Router</a>,
-    <a href="https://test-utils.vuejs.org/" target="_blank" rel="noopener">Vue Test Utils</a>, and
-    <a href="https://github.com/vuejs/devtools" target="_blank" rel="noopener">Vue Dev Tools</a>. If
-    you need more resources, we suggest paying
-    <a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">Awesome Vue</a>
-    a visit.
+    <template #heading>在线代码运行器</template>
+    <p>一个类似于<a href="https://www.runoob.com/">菜鸟教程</a>的代码在线示例运行工具</p>
   </IntroduceItem>
 
   <IntroduceItem>
