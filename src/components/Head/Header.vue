@@ -5,7 +5,7 @@ import { RouterLink } from "vue-router";
 
 <template>
   <header>
-    <img alt="Developer Tools logo" class="logo" src="../assets/logo.svg" width="125" height="125" />
+    <img alt="Developer Tools logo" class="logo" src="../../assets/logo.svg" width="125" height="125" />
     <div class="wrapper">
       <Heading msg="开发者工具" />
 

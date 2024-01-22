@@ -1,21 +1,14 @@
 <script setup>
 import IntroduceItem from './IntroduceItem.vue'
-import EcosystemIcon from './icons/IconEcosystem.vue'
-import CommunityIcon from './icons/IconCommunity.vue'
-import SupportIcon from './icons/IconSupport.vue'
-import ImageConverterIcon from './icons/IconImageConverter.vue'
-import DocumentConverterIcon from './icons/IconDocumentConverter.vue'
-import CodeIcon from './icons/IconCode.vue'
+import SupportIcon from '../icons/IconSupport.vue'
+import ImageConverter from './ImageConverter.vue'
+import DocumentConverterIcon from '../icons/IconDocumentConverter.vue'
+import CodeIcon from '../icons/IconCode.vue'
+import ColorPaletteIcon from '../icons/IconColorPalette.vue'
 </script>
 
 <template>
-  <IntroduceItem>
-    <template #icon>
-      <ImageConverterIcon />
-    </template>
-    <template #heading>图像转换器</template>
-    图像转换器可以快速将不同类型的图片转换成您所需要的格式。
-  </IntroduceItem>
+  <ImageConverter />
 
   <IntroduceItem>
     <template #icon>
@@ -36,7 +29,7 @@ import CodeIcon from './icons/IconCode.vue'
 
   <IntroduceItem>
     <template #icon>
-      <CommunityIcon />
+      <ColorPaletteIcon />
     </template>
     <template #heading>Community</template>
 
