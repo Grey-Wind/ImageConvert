@@ -1,6 +1,13 @@
+<script setup>
+import Header from "../components/Header.vue";
+</script>
+
 <template>
+  <Header />
+
   <div class="about">
-    <h1>This is an about page</h1>
+    <h1>关于</h1>
+    <p>本工具是一个基于</p>
   </div>
 </template>
 

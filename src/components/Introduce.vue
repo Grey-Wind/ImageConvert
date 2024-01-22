@@ -1,47 +1,31 @@
 <script setup>
-import WelcomeItem from './WelcomeItem.vue'
-import DocumentationIcon from './icons/IconDocumentation.vue'
-import ToolingIcon from './icons/IconTooling.vue'
+import IntroduceItem from './IntroduceItem.vue'
 import EcosystemIcon from './icons/IconEcosystem.vue'
 import CommunityIcon from './icons/IconCommunity.vue'
 import SupportIcon from './icons/IconSupport.vue'
+import ImageConverterIcon from './icons/IconImageConverter.vue'
+import DocumentConverterIcon from './icons/IconDocumentConverter.vue'
 </script>
 
 <template>
-  <WelcomeItem>
+  <IntroduceItem>
     <template #icon>
-      <DocumentationIcon />
+      <ImageConverterIcon />
     </template>
-    <template #heading>Documentation</template>
+    <template #heading>图像转换器</template>
+    图像转换器可以快速将不同类型的图片转换成您所需要的格式。
+  </IntroduceItem>
 
-    Vue’s
-    <a href="https://vuejs.org/" target="_blank" rel="noopener">official documentation</a>
-    provides you with all information you need to get started.
-  </WelcomeItem>
-
-  <WelcomeItem>
+  <IntroduceItem>
     <template #icon>
-      <ToolingIcon />
+      <DocumentConverterIcon />
     </template>
-    <template #heading>Tooling</template>
+    <template #heading>文档转换器</template>
+    <p>文档转换器可以快速将不同类型的文档转换成您所需要的格式。</p>
+    <p>例如将Word文档或Excel表格转换为PDF。</p>
+  </IntroduceItem>
 
-    This project is served and bundled with
-    <a href="https://vitejs.dev/guide/features.html" target="_blank" rel="noopener">Vite</a>. The
-    recommended IDE setup is
-    <a href="https://code.visualstudio.com/" target="_blank" rel="noopener">VSCode</a> +
-    <a href="https://github.com/johnsoncodehk/volar" target="_blank" rel="noopener">Volar</a>. If
-    you need to test your components and web pages, check out
-    <a href="https://www.cypress.io/" target="_blank" rel="noopener">Cypress</a> and
-    <a href="https://on.cypress.io/component" target="_blank" rel="noopener"
-      >Cypress Component Testing</a
-    >.
-
-    <br />
-
-    More instructions are available in <code>README.md</code>.
-  </WelcomeItem>
-
-  <WelcomeItem>
+  <IntroduceItem>
     <template #icon>
       <EcosystemIcon />
     </template>
@@ -55,9 +39,9 @@ import SupportIcon from './icons/IconSupport.vue'
     you need more resources, we suggest paying
     <a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">Awesome Vue</a>
     a visit.
-  </WelcomeItem>
+  </IntroduceItem>
 
-  <WelcomeItem>
+  <IntroduceItem>
     <template #icon>
       <CommunityIcon />
     </template>
@@ -73,9 +57,9 @@ import SupportIcon from './icons/IconSupport.vue'
     the official
     <a href="https://twitter.com/vuejs" target="_blank" rel="noopener">@vuejs</a>
     twitter account for latest news in the Vue world.
-  </WelcomeItem>
+  </IntroduceItem>
 
-  <WelcomeItem>
+  <IntroduceItem>
     <template #icon>
       <SupportIcon />
     </template>
@@ -84,5 +68,5 @@ import SupportIcon from './icons/IconSupport.vue'
     As an independent project, Vue relies on community backing for its sustainability. You can help
     us by
     <a href="https://vuejs.org/sponsor/" target="_blank" rel="noopener">becoming a sponsor</a>.
-  </WelcomeItem>
+  </IntroduceItem>
 </template>
