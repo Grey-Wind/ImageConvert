@@ -1,6 +1,6 @@
 <script setup>
-import IntroduceItem from './IntroduceItem.vue'
-import ImageConverterIcon from '../icons/IconImageConverter.vue'
+import IntroduceItem from '../IntroduceItem.vue'
+import ImageConverterIcon from '../../icons/IconImageConverter.vue'
 </script>
 
 <template>

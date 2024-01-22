@@ -1,7 +1,7 @@
 <script setup>
 import IntroduceItem from './IntroduceItem.vue'
 import SupportIcon from '../icons/IconSupport.vue'
-import ImageConverter from './ImageConverter.vue'
+import ImageConverter from './element/ImageConverter.vue'
 import DocumentConverterIcon from '../icons/IconDocumentConverter.vue'
 import CodeIcon from '../icons/IconCode.vue'
 import ColorPaletteIcon from '../icons/IconColorPalette.vue'
