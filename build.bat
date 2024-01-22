@@ -1,1 +1,1 @@
-pnpm build
+vite build --minify false
