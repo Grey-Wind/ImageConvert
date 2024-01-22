@@ -1,26 +1,28 @@
-# 开发者工具
+# DeveloperTools
 
-## 克隆项目教程
+This template should help get you started developing with Vue 3 in Vite.
 
-### 克隆项目
+## Recommended IDE Setup
 
-```sh
-git clone https://github.com/QingYi-Studio/DeveloperTools.git
-```
+[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
 
-### 安装依赖
+## Customize configuration
+
+See [Vite Configuration Reference](https://vitejs.dev/config/).
+
+## Project Setup
 
 ```sh
 pnpm install
 ```
 
-#### 编译并使用热重载开发
+### Compile and Hot-Reload for Development
 
 ```sh
 pnpm dev
 ```
 
-#### 编译并使用生产模式构建
+### Compile and Minify for Production
 
 ```sh
 pnpm build
