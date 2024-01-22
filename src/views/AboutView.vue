@@ -3,12 +3,12 @@ import Header from "../components/Header.vue";
 </script>
 
 <template>
-  <Header />
+    <Header />
 
-  <div class="about">
-    <h1>关于</h1>
-    <p>本工具是一个基于</p>
-  </div>
+    <div class="about">
+      <h1>关于</h1>
+      <p>本站点是一个基于Vue 3实现的一个综合性工具站。</p>
+    </div>
 </template>
 
 <style>
@@ -17,6 +17,12 @@ import Header from "../components/Header.vue";
     min-height: 100vh;
     display: flex;
     align-items: center;
+    flex-direction: column;
+    justify-content: center;
   }
+}
+
+p {
+  font-size: 17px;
 }
 </style>
