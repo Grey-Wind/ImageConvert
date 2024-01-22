@@ -1,12 +1,14 @@
 import { fileURLToPath, URL } from 'node:url'
 
 import { defineConfig } from 'vite'
+// import { viteSingleFile } from 'vite-plugin-singlefile';
 import vue from '@vitejs/plugin-vue'
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     vue(),
+    // viteSingleFile(),
   ],
   resolve: {
     alias: {
@@ -17,12 +19,14 @@ export default defineConfig({
     // 尝试禁用压缩
     minify: false,
 
+    target: "es2015",
+
     // 静态资源文件分拆到不同目录
     rollupOptions: {
       output: {
-        chunkFileNames: 'static/js/[name]-[hash].js',
-        entryFileNames: 'static/js/[name]-[hash].js',
-        assetFileNames: 'static/[ext]/[name]-[hash].[ext]',
+        chunkFileNames: 'static/js/[name].js',
+        entryFileNames: 'static/js/[name].js',
+        assetFileNames: 'static/[ext]/[name].[ext]',
       }
     },
 
