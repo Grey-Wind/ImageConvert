@@ -9,10 +9,21 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "docx-js": "^1.0.1",
+    "file-type": "^19.0.0",
+    "html-to-pdf": "^0.1.11",
+    "html2pdf": "^0.0.11",
+    "html2pdf.js": "^0.10.1",
+    "jspdf": "^2.5.1",
+    "jszip": "^3.10.1",
+    "mammoth": "^1.6.0",
+    "pdf-lib": "^1.17.1",
+    "pdfjs-dist": "^4.0.379",
     "pinia": "^2.1.7",
     "vite-plugin-singlefile": "^1.0.0",
     "vue": "^3.3.11",
-    "vue-router": "^4.2.5"
+    "vue-router": "^4.2.5",
+    "wkhtmltopdf": "^0.4.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.5.2",

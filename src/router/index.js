@@ -17,6 +17,16 @@ const router = createRouter({
       // which is lazy-loaded when the route is visited.
       component: () => import("../views/AboutView.vue"),
     },
+    {
+      path: "/convert/document",
+      name: "documentConvert",
+      component: () => import("../views/documentConvert/index.vue"),
+    },
+    {
+      path: "/convert/document/docx2pdf",
+      name: "docx2pdf",
+      component: () => import("../views/documentConvert/docx2pdf.vue"),
+    },
   ],
 });
 
