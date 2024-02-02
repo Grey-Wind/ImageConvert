@@ -1,3 +1,4 @@
+<!-- 图像转换图标 -->
 <template>
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" style="enable-background:new 0 0 1024 1024"
         xml:space="preserve">
