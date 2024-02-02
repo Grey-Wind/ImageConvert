@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
+import NotFoundView from "../views/NotFound.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -8,6 +9,14 @@ const router = createRouter({
       path: "/",
       name: "home",
       component: HomeView,
+    },
+    {
+      path: "/:error*",
+      name: "404",
+      meta: {
+        title: 'Page not found',
+      },
+      component: NotFoundView,
     },
     {
       path: "/about",
@@ -26,7 +35,7 @@ const router = createRouter({
       path: "/convert/document/docx2pdf",
       name: "docx2pdf",
       component: () => import("../views/documentConvert/docx2pdf.vue"),
-    },
+    },   
   ],
 });
 

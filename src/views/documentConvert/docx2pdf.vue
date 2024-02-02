@@ -1,11 +1,12 @@
 <template>
-  <div id="app">
     <input type="file" @change="convertDocxToPdf" />
-  </div>
 </template>
 
+<style>
+/* Add your styles here */
+</style>
+
 <script setup>
-import { ref } from 'vue';
 import mammoth from 'mammoth/mammoth.browser';
 import html2pdf from 'html2pdf.js';
 
@@ -13,15 +14,23 @@ const convertDocxToPdf = async (event) => {
   try {
     const file = event.target.files[0];
     if (!file) {
-      console.log("No file selected.");
+      console.log("未选择文件");
       return;
     }
 
     // Step 1: Convert DOCX to HTML
     const arrayBuffer = await file.arrayBuffer();
     const result = await mammoth.convertToHtml({ arrayBuffer });
-    const html = result.value; // The generated HTML
-    const docStyles = result.styles; // The document's styles (might not be fully used in the conversion process)
+    let html = result.value; // The generated HTML
+    // 假设这里我们直接应用一些简单的样式
+    const customStyle = `
+      <style>
+        h1, h2, h3 { color: #333; }
+        p { line-height: 1.6; margin-bottom: 1em; }
+      </style>
+    `;
+    // 将样式添加到HTML字符串中
+    html = customStyle + html;
 
     // Step 2: Convert HTML to PDF
     const pdfOptions = {
@@ -32,13 +41,13 @@ const convertDocxToPdf = async (event) => {
       jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
     };
 
-    // Using the html2pdf library to convert the HTML string to PDF
+    // 使用html2pdf库将HTML字符串转换为PDF
     html2pdf().from(html).set(pdfOptions).toPdf().get('pdf').then(function (pdf) {
       var iframe = document.createElement('iframe');
       iframe.style.display = 'none';
       document.body.appendChild(iframe);
       iframe.src = pdf.output('bloburl');
-      // Download the PDF
+      // 下载PDF
       const link = document.createElement('a');
       link.href = iframe.src;
       link.download = pdfOptions.filename;
@@ -46,14 +55,10 @@ const convertDocxToPdf = async (event) => {
       document.body.removeChild(iframe);
     });
 
-    console.log("Conversion successful.");
+    console.log("转换已完成");
   } catch (error) {
-    console.error("Conversion failed: ", error);
+    console.error("转换失败", error);
     throw error;
   }
 };
 </script>
-
-<style>
-/* Add your styles here */
-</style>
